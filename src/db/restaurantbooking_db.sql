@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 21, 2025 at 07:28 AM
+-- Generation Time: May 21, 2025 at 03:48 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -18,36 +18,49 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `money_remittance`
+-- Database: `restaurantbooking_db`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_deposits`
+-- Table structure for table `bookings`
 --
 
-CREATE TABLE `tbl_deposits` (
-  `deposit_id` int(11) NOT NULL,
-  `u_id` int(11) NOT NULL,
-  `u_username` varchar(255) NOT NULL,
-  `u_fname` varchar(255) NOT NULL,
-  `u_lname` varchar(255) NOT NULL,
-  `amount` double NOT NULL,
-  `transaction_description` varchar(255) NOT NULL,
-  `transaction_date` datetime DEFAULT NULL,
+CREATE TABLE `bookings` (
+  `booking_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `table_id` int(11) NOT NULL,
   `status` varchar(255) NOT NULL,
-  `approved_by` text NOT NULL,
-  `approved_at` text NOT NULL
+  `booking_time` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tbl_deposits`
+-- Dumping data for table `bookings`
 --
 
-INSERT INTO `tbl_deposits` (`deposit_id`, `u_id`, `u_username`, `u_fname`, `u_lname`, `amount`, `transaction_description`, `transaction_date`, `status`, `approved_by`, `approved_at`) VALUES
-(1, 34, 'greg123', '', '', 100, 'Deposit request submitted by user', NULL, 'PENDING', '', ''),
-(2, 34, 'greg123', 'greg', 'boss', 500, 'Deposit request submitted by: greg boss', NULL, 'APPROVED', '34', '2025-05-21 13:17:39');
+INSERT INTO `bookings` (`booking_id`, `user_id`, `table_id`, `status`, `booking_time`) VALUES
+(1, 1, 1, 'approved', '2025-05-21 21:31:31');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tables`
+--
+
+CREATE TABLE `tables` (
+  `table_id` int(11) NOT NULL,
+  `table_number` varchar(10) NOT NULL,
+  `capacity` int(11) NOT NULL,
+  `status` varchar(20) DEFAULT 'available'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tables`
+--
+
+INSERT INTO `tables` (`table_id`, `table_number`, `capacity`, `status`) VALUES
+(1, 'T01', 2, 'booked');
 
 -- --------------------------------------------------------
 
@@ -235,37 +248,6 @@ INSERT INTO `tbl_log` (`log_id`, `u_id`, `u_username`, `login_time`, `u_type`, `
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_sendmoney`
---
-
-CREATE TABLE `tbl_sendmoney` (
-  `id` int(11) NOT NULL,
-  `sender_id` int(11) NOT NULL,
-  `sender_username` varchar(255) NOT NULL,
-  `receiver_username` varchar(255) NOT NULL,
-  `amount` double NOT NULL,
-  `transaction_description` varchar(255) NOT NULL,
-  `status` enum('COMPLETED','CANCELLED','','') NOT NULL,
-  `sender_fname` varchar(100) DEFAULT NULL,
-  `sender_lname` varchar(100) DEFAULT NULL,
-  `receiver_fname` varchar(100) DEFAULT NULL,
-  `receiver_lname` varchar(100) DEFAULT NULL,
-  `transaction_date` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tbl_sendmoney`
---
-
-INSERT INTO `tbl_sendmoney` (`id`, `sender_id`, `sender_username`, `receiver_username`, `amount`, `transaction_description`, `status`, `sender_fname`, `sender_lname`, `receiver_fname`, `receiver_lname`, `transaction_date`) VALUES
-(1, 0, 'greg123', 'rhex123', 2000, 'Money Sent', 'COMPLETED', NULL, NULL, NULL, NULL, '2025-05-21 13:02:28'),
-(2, 34, 'greg123', 'rhex123', 500, 'Money Sent', 'COMPLETED', NULL, NULL, NULL, NULL, '2025-05-21 13:02:28'),
-(3, 34, 'greg123', 'rhex123', 500, 'Money Sent', 'COMPLETED', NULL, NULL, NULL, NULL, '2025-05-21 13:02:28'),
-(4, 34, 'greg123', 'rhex123', 100, 'Money Sent', 'COMPLETED', 'greg', 'boss', 'delima', 'rhex', '2025-05-21 13:02:28');
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `tbl_users`
 --
 
@@ -300,18 +282,24 @@ INSERT INTO `tbl_users` (`u_id`, `u_fname`, `u_lname`, `u_email`, `u_username`, 
 (31, 'jay', 'boss', 'jayboss@gmail.com', 'jay123', 'ky88G1YlfOhTmsJp16q0JVDaz4gY0HXwvfGZBWKq4+8=', 'User', 'Active', 'What\'s the name of your first pet?', 'OstyYRKvTUuxwHH/PXNPTcb9/gMXt56CfKg7QYENPfA=', 'Null', 0.00),
 (32, 'mark', 'pacaldo', 'markpacaldo@gmail.com', 'mark123', 'ky88G1YlfOhTmsJp16q0JVDaz4gY0HXwvfGZBWKq4+8=', 'User', 'Active', 'What\'s the name of your first pet?', 'Fkd2iMDgBpnGz6RJejYS1+g8UyBitkslD+2JCBKO1Ug=', 'Null', 0.00),
 (33, 'delima', 'rhex', 'delimarhex@gmail.com', 'rhex123', 'ky88G1YlfOhTmsJp16q0JVDaz4gY0HXwvfGZBWKq4+8=', 'User', 'Active', 'What\'s the name of your first pet?', 'Fkd2iMDgBpnGz6RJejYS1+g8UyBitkslD+2JCBKO1Ug=', 'Null', 600.00),
-(34, 'greg', 'boss', 'gregboss@gmail.com', 'greg123', 'ky88G1YlfOhTmsJp16q0JVDaz4gY0HXwvfGZBWKq4+8=', 'Teller', 'Active', 'What\'s your favorite food?', '3kM+1VChYkp0J5qjDDa1LyhEJmEMAUtwAi5MiJ68qHU=', 'src/images/467719808_849346147222609_1601374335414698002_n.jpg', 7400.00);
+(34, 'greg', 'boss', 'gregboss@gmail.com', 'greg123', 'ky88G1YlfOhTmsJp16q0JVDaz4gY0HXwvfGZBWKq4+8=', 'Admin', 'Active', 'What\'s your favorite food?', '3kM+1VChYkp0J5qjDDa1LyhEJmEMAUtwAi5MiJ68qHU=', 'src/images/467719808_849346147222609_1601374335414698002_n.jpg', 7400.00);
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `tbl_deposits`
+-- Indexes for table `bookings`
 --
-ALTER TABLE `tbl_deposits`
-  ADD PRIMARY KEY (`deposit_id`),
-  ADD KEY `u_id` (`u_id`);
+ALTER TABLE `bookings`
+  ADD PRIMARY KEY (`booking_id`);
+
+--
+-- Indexes for table `tables`
+--
+ALTER TABLE `tables`
+  ADD PRIMARY KEY (`table_id`),
+  ADD UNIQUE KEY `table_number` (`table_number`);
 
 --
 -- Indexes for table `tbl_log`
@@ -319,12 +307,6 @@ ALTER TABLE `tbl_deposits`
 ALTER TABLE `tbl_log`
   ADD PRIMARY KEY (`log_id`),
   ADD KEY `fk_log_user_id` (`u_id`);
-
---
--- Indexes for table `tbl_sendmoney`
---
-ALTER TABLE `tbl_sendmoney`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `tbl_users`
@@ -337,22 +319,22 @@ ALTER TABLE `tbl_users`
 --
 
 --
--- AUTO_INCREMENT for table `tbl_deposits`
+-- AUTO_INCREMENT for table `bookings`
 --
-ALTER TABLE `tbl_deposits`
-  MODIFY `deposit_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+ALTER TABLE `bookings`
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `tables`
+--
+ALTER TABLE `tables`
+  MODIFY `table_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `tbl_log`
 --
 ALTER TABLE `tbl_log`
   MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=169;
-
---
--- AUTO_INCREMENT for table `tbl_sendmoney`
---
-ALTER TABLE `tbl_sendmoney`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `tbl_users`
@@ -363,12 +345,6 @@ ALTER TABLE `tbl_users`
 --
 -- Constraints for dumped tables
 --
-
---
--- Constraints for table `tbl_deposits`
---
-ALTER TABLE `tbl_deposits`
-  ADD CONSTRAINT `tbl_deposits_ibfk_1` FOREIGN KEY (`u_id`) REFERENCES `tbl_users` (`u_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `tbl_log`
