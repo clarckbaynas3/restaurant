@@ -11,6 +11,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -125,6 +126,10 @@ private void updateBookingStatus(int bookingId, String newStatus) {
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        area = new javax.swing.JTextArea();
+        jButton5 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -182,22 +187,66 @@ private void updateBookingStatus(int bookingId, String newStatus) {
         });
         jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 60, -1, -1));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 710, 480));
+        area.setColumns(20);
+        area.setFont(new java.awt.Font("Monospaced", 1, 13)); // NOI18N
+        area.setRows(5);
+        jScrollPane2.setViewportView(area);
+
+        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 130, 240, 230));
+
+        jButton5.setBackground(new java.awt.Color(255, 255, 255));
+        jButton5.setText("Reset");
+        jButton5.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 390, 80, 40));
+
+        jButton6.setBackground(new java.awt.Color(255, 255, 255));
+        jButton6.setText("Print Receipt");
+        jButton6.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 390, 110, 40));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1060, 490));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-      int selectedRow = tblbooking.getSelectedRow();
-    if (selectedRow == -1) {
-        JOptionPane.showMessageDialog(this, "Please select a booking to approve.");
-        return;
-    }
-    
-    // Get hidden booking_id from model, column 0
-    int bookingId = (int) tblbooking.getModel().getValueAt(selectedRow, 0);
-    updateBookingStatus(bookingId, "approved");
-    displayBookingData();  // TODO add your handling code here:
+    int selectedRow = tblbooking.getSelectedRow();
+if (selectedRow == -1) {
+    JOptionPane.showMessageDialog(this, "Please select a booking to approve.");
+    return;
+}
+
+// Get booking details from the selected row
+int bookingId = (int) tblbooking.getModel().getValueAt(selectedRow, 0);
+String tableNumber = tblbooking.getModel().getValueAt(selectedRow, 1).toString(); // Adjust column index if needed
+String bookingTime = tblbooking.getModel().getValueAt(selectedRow, 2).toString(); // Adjust column index if needed
+
+// Update status
+updateBookingStatus(bookingId, "approved");
+
+// Display updated data
+displayBookingData();
+
+// Show receipt
+area.setText("");
+area.append("*********************************************\n");
+area.append("*        Money Remittance's Receipt System  *\n");
+area.append("*********************************************\n\n");
+area.append(new Date().toString() + "\n\n");
+area.append("Booking ID: " + bookingId + "\n");
+area.append("Table Number: " + tableNumber + "\n");
+area.append("Booking Time: " + bookingTime + "\n");
+// TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -217,6 +266,19 @@ private void updateBookingStatus(int bookingId, String newStatus) {
         usf.setVisible(true);
         this.dispose();         // TODO add your handling code here:
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // area.setText("");
+        //username.setText("");
+        //loanamount.setText("");
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        try{
+            area.print();
+        }catch(Exception e){
+        }
+    }//GEN-LAST:event_jButton6ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -254,12 +316,16 @@ private void updateBookingStatus(int bookingId, String newStatus) {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    public javax.swing.JTextArea area;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    public javax.swing.JButton jButton5;
+    public javax.swing.JButton jButton6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable tblbooking;
     // End of variables declaration//GEN-END:variables
 }
