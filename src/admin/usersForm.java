@@ -195,7 +195,7 @@ private JComboBox<String> type;
 
     String sql = "SELECT * FROM tbl_users";
 
-    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/car_rental", "root", "");
+    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/restaurantbooking_db", "root", "");
          PreparedStatement pst = con.prepareStatement(sql);
          ResultSet rs = pst.executeQuery()) {
 
@@ -224,7 +224,7 @@ private JComboBox<String> type;
     if (confirm == JOptionPane.YES_OPTION) {
         String sql = "DELETE FROM tbl_users WHERE u_id=?";
 
-        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/car_rental", "root", "");
+        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/restaurantbooking_db", "root", "");
              PreparedStatement pst = con.prepareStatement(sql)) {
 
             pst.setInt(1, userId);
