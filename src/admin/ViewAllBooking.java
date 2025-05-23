@@ -240,7 +240,7 @@ displayBookingData();
 // Show receipt
 area.setText("");
 area.append("*********************************************\n");
-area.append("*        Money Remittance's Receipt System  *\n");
+area.append("*       Restarurant Booking Receipt System  *\n");
 area.append("*********************************************\n\n");
 area.append(new Date().toString() + "\n\n");
 area.append("Booking ID: " + bookingId + "\n");
