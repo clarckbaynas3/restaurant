@@ -220,33 +220,64 @@ private void updateBookingStatus(int bookingId, String newStatus) {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    int selectedRow = tblbooking.getSelectedRow();
+  int selectedRow = tblbooking.getSelectedRow();
+
 if (selectedRow == -1) {
     JOptionPane.showMessageDialog(this, "Please select a booking to approve.");
     return;
 }
 
-// Get booking details from the selected row
+// Get booking_id from table
 int bookingId = (int) tblbooking.getModel().getValueAt(selectedRow, 0);
-String tableNumber = tblbooking.getModel().getValueAt(selectedRow, 1).toString(); // Adjust column index if needed
-String bookingTime = tblbooking.getModel().getValueAt(selectedRow, 2).toString(); // Adjust column index if needed
 
-// Update status
+// Approve booking in DB
 updateBookingStatus(bookingId, "approved");
 
-// Display updated data
+// Refresh data
 displayBookingData();
 
-// Show receipt
-area.setText("");
-area.append("*********************************************\n");
-area.append("*       Restarurant Booking Receipt System  *\n");
-area.append("*********************************************\n\n");
-area.append(new Date().toString() + "\n\n");
-area.append("Booking ID: " + bookingId + "\n");
-area.append("Table Number: " + tableNumber + "\n");
-area.append("Booking Time: " + bookingTime + "\n");
-// TODO add your handling code here:
+// Fetch full booking details from DB
+try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/restaurantbooking_db", "root", "")) {
+
+    String sql = "SELECT b.booking_id, b.user_id, b.u_fname, b.u_lname, b.table_id, t.table_number, b.status, b.booking_time " +
+                 "FROM bookings b " +
+                 "JOIN tables t ON b.table_id = t.table_id " +
+                 "WHERE b.booking_id = ?";
+    
+    PreparedStatement pst = conn.prepareStatement(sql);
+    pst.setInt(1, bookingId);
+    ResultSet rs = pst.executeQuery();
+
+    if (rs.next()) {
+        // Clear the receipt area
+        area.setText("");
+
+        // Header
+        area.append("*********************************************\n");
+        area.append("*         Restaurant Booking Receipt        *\n");
+        area.append("*********************************************\n\n");
+
+        // Date
+        area.append("Date: " + new java.util.Date().toString() + "\n\n");
+
+        // Booking Details
+        area.append("Booking ID     : " + rs.getInt("booking_id") + "\n");
+        area.append("User ID        : " + rs.getInt("user_id") + "\n");
+        area.append("Name           : " + rs.getString("u_fname") + " " + rs.getString("u_lname") + "\n");
+        area.append("Table Number   : " + rs.getString("table_number") + "\n");
+        area.append("Booking Status : " + rs.getString("status") + "\n");
+        area.append("Booking Time   : " + rs.getString("booking_time") + "\n");
+        area.append("\nThank you for your reservation!");
+    }
+
+    rs.close();
+    pst.close();
+
+} catch (SQLException ex) {
+    JOptionPane.showMessageDialog(this, "Error generating receipt: " + ex.getMessage());
+    ex.printStackTrace();
+}
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

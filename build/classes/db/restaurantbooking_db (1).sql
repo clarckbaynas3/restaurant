@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 21, 2025 at 03:48 PM
+-- Generation Time: Jun 10, 2025 at 05:33 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -30,6 +30,8 @@ SET time_zone = "+00:00";
 CREATE TABLE `bookings` (
   `booking_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
+  `u_fname` varchar(255) NOT NULL,
+  `u_lname` varchar(255) NOT NULL,
   `table_id` int(11) NOT NULL,
   `status` varchar(255) NOT NULL,
   `booking_time` datetime NOT NULL
@@ -39,8 +41,12 @@ CREATE TABLE `bookings` (
 -- Dumping data for table `bookings`
 --
 
-INSERT INTO `bookings` (`booking_id`, `user_id`, `table_id`, `status`, `booking_time`) VALUES
-(1, 1, 1, 'approved', '2025-05-21 21:31:31');
+INSERT INTO `bookings` (`booking_id`, `user_id`, `u_fname`, `u_lname`, `table_id`, `status`, `booking_time`) VALUES
+(1, 1, '', '', 1, 'approved', '2025-05-21 21:31:31'),
+(2, 1, '', '', 2, 'pending', '2025-06-10 10:47:17'),
+(3, 1, 'delima', 'rhex', 2, 'approved', '2025-06-10 11:19:07'),
+(4, 1, 'delima', 'rhex', 3, 'approved', '2025-06-10 11:26:29'),
+(5, 1, 'delima', 'rhex', 4, 'approved', '2025-06-10 11:30:26');
 
 -- --------------------------------------------------------
 
@@ -60,7 +66,10 @@ CREATE TABLE `tables` (
 --
 
 INSERT INTO `tables` (`table_id`, `table_number`, `capacity`, `status`) VALUES
-(1, 'T01', 2, 'booked');
+(1, 'T01', 2, 'booked'),
+(2, 'T05', 6, 'booked'),
+(3, 'T07', 5, 'booked'),
+(4, 'T08', 2, 'booked');
 
 -- --------------------------------------------------------
 
@@ -322,13 +331,13 @@ ALTER TABLE `tbl_users`
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `tables`
 --
 ALTER TABLE `tables`
-  MODIFY `table_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `table_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `tbl_log`

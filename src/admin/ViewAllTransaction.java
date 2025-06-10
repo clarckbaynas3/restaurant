@@ -24,27 +24,28 @@ public class ViewAllTransaction extends javax.swing.JFrame {
         displayApprovedBookings();
     }
     
-    public void displayApprovedBookings() {
+  public void displayApprovedBookings() {
     try {
         dbConnector dbc = new dbConnector();
 
-        String sql = "SELECT b.booking_id, t.table_number, b.status, b.booking_time " +
+        String sql = "SELECT b.booking_id, t.table_number, t.capacity, b.status, b.booking_time " +
                      "FROM bookings b " +
                      "JOIN tables t ON b.table_id = t.table_id " +
                      "WHERE b.status = 'approved'";
 
         ResultSet rs = dbc.getData(sql);
 
-        String[] columnNames = {"Booking ID", "Table Number", "Status", "Booking Time"};
+        String[] columnNames = {"Booking ID", "Table Number", "Capacity", "Status", "Booking Time"};
         DefaultTableModel approvedModel = new DefaultTableModel(columnNames, 0);
 
         while (rs.next()) {
             int bookingId = rs.getInt("booking_id");
             String tableNumber = rs.getString("table_number");
+            int capacity = rs.getInt("capacity");
             String status = rs.getString("status");
             String bookingTime = rs.getString("booking_time");
 
-            Object[] rowData = {bookingId, tableNumber, status, bookingTime};
+            Object[] rowData = {bookingId, tableNumber, capacity, status, bookingTime};
             approvedModel.addRow(rowData);
         }
 
@@ -78,13 +79,13 @@ public class ViewAllTransaction extends javax.swing.JFrame {
 
         tblApprovedBookings.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Booking ID", "Table Number", "Status", "Booking Time"
+                "Booking ID", "Table Number", "Capacity", "Status", "Booking Time"
             }
         ));
         jScrollPane1.setViewportView(tblApprovedBookings);
@@ -122,6 +123,7 @@ public class ViewAllTransaction extends javax.swing.JFrame {
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 670, 480));
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -166,8 +168,6 @@ public class ViewAllTransaction extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton cancel;
-    private javax.swing.JButton cancel1;
     private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;

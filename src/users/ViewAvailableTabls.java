@@ -18,6 +18,7 @@ import javax.swing.JOptionPane;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 
+
 /**
  *
  * @author milan
@@ -149,18 +150,21 @@ private void loadAvailableTables() {
         Connection conn = DriverManager.getConnection(
             "jdbc:mysql://localhost:3306/restaurantbooking_db", "root", "");
 
-        String sql = "SELECT table_id, table_number, capacity FROM tables WHERE status = 'available'";
+        String sql = "SELECT table_id, table_number, capacity, status FROM tables WHERE status = 'available'";
         PreparedStatement stmt = conn.prepareStatement(sql);
         ResultSet rs = stmt.executeQuery();
 
-        model.setRowCount(0); // Clear current data
+        // Set column headers
+        model.setColumnIdentifiers(new String[]{"Table ID", "Table Number", "Capacity", "Status"});
+        model.setRowCount(0); // Clear existing data
 
         while (rs.next()) {
             int id = rs.getInt("table_id");
             String tableNumber = rs.getString("table_number");
             int capacity = rs.getInt("capacity");
+            String status = rs.getString("status");
 
-            model.addRow(new Object[]{id, tableNumber, capacity});
+            model.addRow(new Object[]{id, tableNumber, capacity, status});
         }
 
         rs.close();
@@ -173,6 +177,7 @@ private void loadAvailableTables() {
 }
 
 
+
 private void bookSelectedTable(int userId) {
     int selectedRow = tblbooking.getSelectedRow();
 
@@ -180,29 +185,20 @@ private void bookSelectedTable(int userId) {
         JOptionPane.showMessageDialog(this, "Please select a table to book.");
         return;
     }
+    
 
     int tableId = (int) model.getValueAt(selectedRow, 0);
     String tableNumber = model.getValueAt(selectedRow, 1).toString();
     int capacity = (int) model.getValueAt(selectedRow, 2);
+    String tableStatus = model.getValueAt(selectedRow, 3).toString();
 
-    try {
-        Connection conn = DriverManager.getConnection(
-            "jdbc:mysql://localhost:3306/restaurantbooking_db", "root", "");
-
-        String sql = "INSERT INTO bookings (table_id, user_id, status, booking_time) VALUES (?, ?, 'pending', NOW())";
-        PreparedStatement stmt = conn.prepareStatement(sql);
-        stmt.setInt(1, tableId);
-        stmt.setInt(2, userId); // Pass logged in user id here
-        stmt.executeUpdate();
-
-        conn.close();
-
-        JOptionPane.showMessageDialog(this, "Booking request sent for Table " + tableNumber);
-    } catch (Exception ex) {
-        ex.printStackTrace();
-        JOptionPane.showMessageDialog(this, "Booking failed.");
-    }
+    // Open Bookingfillup form with selected values
+   Bookingfilllup bookingForm = new Bookingfilllup(tableId, tableNumber, capacity, tableStatus, userId);
+    bookingForm.setVisible(true);
+    this.dispose(); // Close current window if needed
 }
+
+
 
 
 
